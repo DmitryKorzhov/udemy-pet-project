@@ -1,29 +1,32 @@
 import streamlit as st
 from streamlit_chat import message
 
-# Add CSS styles
-st.markdown("""
-<style>
-    .input-field {
-        font-size: 18px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-</style>
-""", unsafe_allow_html=True)
+st.set_page_config(
+    page_title="Streamlit Chat - Demo",
+    page_icon=":robot:"
+)
 
-# Chat logic function
-def chat_logic(user_message):
-    return "I don't know."
+st.header("Streamlit Chat - Demo")
 
-# User input field
-st.markdown("### Ask the bot a question:")
-user_message = st.text_input("", key="user_input", on_change=None, max_chars=None, type="default", help=None, placeholder="Type your question here...", className="input-field")
+if 'generated' not in st.session_state:
+    st.session_state['generated'] = []
 
-if user_message:
-    message(user_message, is_user=True)  # User's message
+if 'past' not in st.session_state:
+    st.session_state['past'] = []
 
-    bot_response = chat_logic(user_message)  # Get the bot's response
-    message(bot_response)  # Bot's response
+def get_text():
+    input_text = st.text_input("You: ", "Hello, how are you?", key="input")
+    return input_text 
 
+user_input = get_text()
+
+if user_input:
+    output = "I don't know"
+    st.session_state.past.append(user_input)
+    st.session_state.generated.append(output)
+
+if st.session_state['generated']:
+
+    for i in range(len(st.session_state['generated'])-1, -1, -1):
+        message(st.session_state["generated"][i], key=str(i))
+        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')

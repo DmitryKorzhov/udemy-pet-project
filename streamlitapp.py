@@ -4,7 +4,7 @@ from streamlit_chat import message
 
 
 
-openai.api_key=st.secrets["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"]
+openai.api_key=st.secrets["pass"]
 
 def generate_response(prompt):
     completions = openai.Completion.create (

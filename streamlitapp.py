@@ -8,7 +8,7 @@ st.set_page_config(
 
 st.header("Streamlit Chat - Demo")
 
-message(“Welcome to Streamlit-Chat”)
+message("Welcome to Streamlit-Chat")
 
 if ‘message_history’ not in st.session_state:
 st.session_state.message_history = 

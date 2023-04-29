@@ -8,12 +8,17 @@ st.set_page_config(
 
 st.header("Streamlit Chat - Demo")
 
-for message_ in message_history:
-    message(message_)   # display all the previous message
+message(“Welcome to Streamlit-Chat”)
 
-placeholder = st.empty()  # placeholder for latest message
-input_ = st.text_input("you:")
-message_history.append(input_)
+if ‘message_history’ not in st.session_state:
+st.session_state.message_history = 
+
+for message_ in st.session_state.message_history:
+message(message_,is_user=True) # display all the previous message
+
+placeholder = st.empty() # placeholder for latest message
+input_ = st.text_input(“you”)
+st.session_state.message_history.append(input_)
 
 with placeholder.container():
-    message(message_history[-1]) # display the latest message
+message( st.session_state.message_history[-1], is_user=True) # display the latest message

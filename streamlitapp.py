@@ -1,24 +1,55 @@
+import openai
 import streamlit as st
 from streamlit_chat import message
 
-st.set_page_config(
-    page_title="Streamlit Chat - Demo",
-    page_icon=":robot:"
-)
 
-st.header("Streamlit Chat - Demo")
 
-message("Welcome to Streamlit-Chat")
+openai.api_key=st.secrets["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"]
 
-if ‘message_history’ not in st.session_state:
-st.session_state.message_history = 
+def generate_response(prompt):
+    completions = openai.Completion.create (
+        engine="text-davinci-003",
+        prompt=prompt,
+        temperature=0.9,
+        max_tokens=150,
+        top_p=1,
+        frequency_penalty=0.0,
+        presence_penalty=0.6,
+        stop=[" Human:", " AI:"]
+    )
 
-for message_ in st.session_state.message_history:
-message(message_,is_user=True) # display all the previous message
+    message = completions.choices[0].text
+    return message
 
-placeholder = st.empty() # placeholder for latest message
-input_ = st.text_input(“you”)
-st.session_state.message_history.append(input_)
+st.title('Lamis ChatBot  🤖 🤖')
 
-with placeholder.container():
-message( st.session_state.message_history[-1], is_user=True) # display the latest message
+
+if 'generated' not in st.session_state:
+    st.session_state['generated'] = []
+
+if 'past' not in st.session_state:
+    st.session_state['past'] = []
+
+
+def get_text():
+    #input_text = st.text_input("Human [enter your message here]: "," Hello Mr AI how was your day today? ", key="input")
+    input_text= st.text_input('Human [enter your message here]:', '')
+    return input_text 
+
+
+user_input = get_text()
+
+
+
+if user_input:
+    output = generate_response(user_input)
+    st.session_state.past.append(user_input)
+    st.session_state.generated.append(output)
+    
+
+
+if st.session_state['generated']:
+
+    for i in range(len(st.session_state['generated'])-1, -1, -1):
+        message(st.session_state["generated"][i], key=str(i))
+        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')

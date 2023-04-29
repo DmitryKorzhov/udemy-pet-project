@@ -8,28 +8,12 @@ st.set_page_config(
 
 st.header("Streamlit Chat - Demo")
 
-if 'generated' not in st.session_state:
-    st.session_state['generated'] = []
+for message_ in message_history:
+    message(message_)   # display all the previous message
 
-if 'past' not in st.session_state:
-    st.session_state['past'] = []
+placeholder = st.empty()  # placeholder for latest message
+input_ = st.text_input("you:")
+message_history.append(input_)
 
-def display_conversation_history():
-    if st.session_state['generated']:
-        for i in range(len(st.session_state['generated'])-1, -1, -1):
-            message(st.session_state["generated"][i], key=str(i))
-            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
-
-def get_text():
-    input_text = st.text_input("You: ", "Hello, how are you?", key="input")
-    return input_text 
-
-display_conversation_history()
-
-user_input = get_text()
-
-if st.button("Send"):
-    output = "I don't know"
-    st.session_state.past.append(user_input)
-    st.session_state.generated.append(output)
-    display_conversation_history()
+with placeholder.container():
+    message(message_history[-1]) # display the latest message
